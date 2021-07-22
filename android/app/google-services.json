@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "972697684538",
+    "project_id": "katalog-flutter",
+    "storage_bucket": "katalog-flutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:972697684538:android:6816ed00d5a75657808303",
+        "android_client_info": {
+          "package_name": "com.example.katalog"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "972697684538-00edd6j8eof28eaft4jpehk5j8f2vkfs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAefLE8rWVxmJPpMEzm3hW0N4ZIR67IlP4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "972697684538-00edd6j8eof28eaft4jpehk5j8f2vkfs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
