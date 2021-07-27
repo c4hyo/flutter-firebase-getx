@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttericon/font_awesome5_icons.dart';
 import 'package:get/get.dart';
@@ -5,6 +6,8 @@ import 'package:katalog/kontroller/authController.dart';
 import 'package:katalog/kontroller/userController.dart';
 import 'package:katalog/model/barangModel.dart';
 import 'package:katalog/screen/komponen/card.dart';
+import 'package:katalog/screen/main/addBarang.dart';
+import 'package:katalog/services/barangServices.dart';
 import 'package:katalog/services/userServices.dart';
 import 'package:katalog/utility/style.dart';
 
@@ -36,12 +39,30 @@ class BarangList extends StatelessWidget {
             backgroundColor: Colors.white70,
             actions: [
               IconButton(
+                onPressed: () => Get.to(AddBarang()),
+                icon: Icon(Icons.add,color: Colors.black,),
+              ),
+              IconButton(
                 icon: Icon(
                   Icons.exit_to_app,
                   color: Colors.black87,
                 ),
                 onPressed: () {
-                  auth.logOut();
+                  Get.defaultDialog(
+                    title: "Konfirmasi",
+                    middleText: "Log Out",
+                    barrierDismissible: false,
+                    cancel: ElevatedButton(
+                      onPressed: () => Get.back(),
+                      child: Text("Tidak"),
+                    ),
+                    confirm: ElevatedButton(
+                      onPressed: () {
+                        auth.logOut();
+                      },
+                      child: Text("Ya"),
+                    ),
+                  );
                 },
               ),
             ],
@@ -69,72 +90,21 @@ class BarangList extends StatelessWidget {
           body: SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(10),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20, bottom: 20),
-                      child: Text(
-                        "Hot Keywords",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                    GridView.builder(
-                      primary: false,
-                      shrinkWrap: true,
-                      itemCount: _hotKeyword.length,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        childAspectRatio: 2,
-                        crossAxisSpacing: 5,
-                        mainAxisSpacing: 5,
-                      ),
-                      itemBuilder: (context, index) {
-                        return OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                            side: BorderSide(
-                              color: Colors.black54,
-                            ),
-                          ),
-                          onPressed: () {
-                            print("$index");
-                          },
-                          child: Text(
-                            "${_hotKeyword[index]}",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.black,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20, bottom: 20),
-                      child: Text(
-                        "Recent Search",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                    ListView.builder(
-                      primary: false,
-                      shrinkWrap: true,
-                      itemCount: listBarang.length,
-                      itemBuilder: (context, index) {
-                        return cardBarangAll(model: listBarang[index]);
-                      },
-                    ),
-                  ],
-                ),
+              child: StreamBuilder<QuerySnapshot>(
+                stream: BarangServices.barang.snapshots(),
+                builder: (_,snapshot){
+                  if(!snapshot.hasData){
+                    return Center(child: Text("Tidak ada barang"),);
+                  }
+                  return ListView.builder(
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (_,index){
+                      DocumentSnapshot doc = snapshot.data!.docs[index];
+                      BarangModel model = BarangModel.docSnapshot(doc);
+                      return cardBarangAll(model: model);
+                    },
+                  );
+                },
               ),
             ),
           ),

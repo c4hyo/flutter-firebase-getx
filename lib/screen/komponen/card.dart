@@ -24,7 +24,7 @@ Widget cardBarangAll({BarangModel? model}) {
                       ? FlutterLogo(
                           size: 80,
                         )
-                      : Image.asset("${model.imageUrl}"),
+                      : Image(image: NetworkImage(model.imageUrl!),),
                 ),
               ),
             ),
